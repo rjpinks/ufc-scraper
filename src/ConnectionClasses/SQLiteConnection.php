@@ -20,7 +20,6 @@
          */
         public function connect()
         {
-            echo "sqlite:" . Config::PATH_TO_SQLITE_FILE . PHP_EOL;
             try {
                 $this->pdo = new \PDO("sqlite:" . Config::PATH_TO_SQLITE_FILE);
              } catch (\PDOException $e) {
