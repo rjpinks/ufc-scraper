@@ -1,0 +1,21 @@
+{
+    "name": "rjpinks/ufc-scraper",
+    "description": "Web scraper that collects UFC Fighter stats.",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Rjpinks\\UfcScraper\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ryan",
+            "email": "pinkstonr54@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/browser-kit": "^7.1",
+        "symfony/http-client": "^7.1",
+        "symfony/css-selector": "^7.1"
+    }
+}
