@@ -5,7 +5,8 @@
     use Symfony\Component\HttpClient\HttpClient;
     use Symfony\Component\CssSelector\CssSelectorConverter;
 
-    class Scraper {
+    class Scraper
+    {
         private $browser;
         private $converter;
 
