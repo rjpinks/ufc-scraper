@@ -1,6 +1,4 @@
 <?php
-    use Rjpinks\UfcScraper\ConnectionClasses\SQLiteConnection;
-
     if (!file_exists(__DIR__ . "\ufcstats.sqlite")) {
         $db = new SQLite3("ufcstats.sqlite");
     }
@@ -27,9 +25,8 @@
         average_takedowns_per_fifteen REAL NOT NULL,
         takedown_accuracy REAL NOT NULL,
         takedown_defence REAL NOT NULL,
-        average_submissions_attempted_per_fifteen REAL NOT NULL,
-    )"
-    );
+        average_submissions_attempted_per_fifteen REAL NOT NULL
+    )");
     $pdo->exec(
     "CREATE TABLE fight (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -51,8 +48,7 @@
 
         FOREIGN KEY (fighter_one_id) REFERENCES fighter (id),
         FOREIGN KEY (fighter_two_id) REFERENCES fighter (id)
-    )"
-    );
+    )");
 
     echo "Database created\n";
 ?>

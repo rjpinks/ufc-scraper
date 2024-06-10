@@ -7,7 +7,8 @@
      * @param String[] $url
      * @return Array[]
      */
-    function testScrapeFighterStats($urls) {
+    function testScrapeFighterStats($urls)
+    {
         $scraper = new Scraper();
         return $scraper->scrapeFighterStats($urls);
     }

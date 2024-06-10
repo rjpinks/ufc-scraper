@@ -15,10 +15,10 @@
     }
     // Parse the data and post into db
     $cleaner = new Cleaner();
-    foreach($urlList as $url) {
-        $pdo = new SQLiteConnection();
+    $pdo = new SQLiteConnection();
+    $connection = $pdo->connect();
+    foreach ($urlList as $url) {
         $cleanedStats = $cleaner->fighterStatsToSql($scraper->scrapeFighterStats($url));
-        $connection = $pdo->connect();
         $connection->exec(
         "INSERT INTO fighter (
             first_name,
