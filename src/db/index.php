@@ -21,7 +21,7 @@
         strikes_landed_per_min REAL NOT NULL,
         striking_accuracy REAL NOT NULL,
         strikes_absorbed_per_min REAL NOT NULL,
-        opponent_strikes_missed REAL NOT NULL,
+        striking_defence REAL NOT NULL,
         average_takedowns_per_fifteen REAL NOT NULL,
         takedown_accuracy REAL NOT NULL,
         takedown_defence REAL NOT NULL,
@@ -49,6 +49,8 @@
         FOREIGN KEY (fighter_one_id) REFERENCES fighter (id),
         FOREIGN KEY (fighter_two_id) REFERENCES fighter (id)
     )");
+
+    $pdo = null;
 
     echo "Database created\n";
 ?>
