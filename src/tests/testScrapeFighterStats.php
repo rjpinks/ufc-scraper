@@ -3,11 +3,7 @@
 
     use Rjpinks\UfcScraper\Scrapers\Scraper;
 
-    /**
-     * @param String[] $url
-     * @return Array[]
-     */
-    function testScrapeFighterStats($urls)
+    function testScrapeFighterStats(Array $urls): Array
     {
         $scraper = new Scraper();
         return $scraper->scrapeFighterStats($urls);

@@ -7,8 +7,8 @@
 
     class Scraper
     {
-        private $browser;
-        private $converter;
+        private HttpBrowser $browser;
+        private CssSelectorConverter $converter;
 
         public function __construct()
         {
@@ -16,11 +16,7 @@
             $this->converter = new CssSelectorConverter();
         }
 
-        /**
-         * @param String $url
-         * @return String[]
-         */
-        public function scrapeFighterUrls($url)
+        public function scrapeFighterUrls(String $url): Array
         {
             // obtain HTML, convert to XML, and use XPath (from CssConverter) to find the important HTML elements.
             $this->browser->request('GET', $url);
@@ -42,11 +38,8 @@
             return array_unique($fighterUrls);
         }
 
-        /**
-         * @param String[]
-         * @return Array[]
-         */
-        public function scrapeFighterStats($urls)
+        // urls should be the result of scrapeFighterUrls
+        public function scrapeFighterStats(Array $urls): Array
         {
             $masterStats = [];
             foreach ($urls as $url) {
@@ -108,6 +101,27 @@
                 $masterStats[] = $fighterStatsMap;
                 }
             return $masterStats;
+        }
+
+        public function scrapeEventUrls(String $url): Array
+        {
+            $this->browser->request("GET", $url);
+            $content = $this->browser->getResponse()->getContent();
+
+            libxml_use_internal_errors(true);
+    
+            $doc = new \DOMDocument();
+            $doc->loadHTML($content);
+            $xmlDocument = new \DOMXPath($doc);
+            $xPathExpression = $this->converter->toXPath("td > i > a");
+            $anchorElements = $xmlDocument->evaluate($xPathExpression);
+
+            // clean the data
+            $eventUrls = [];
+            foreach ($anchorElements as $anchor) {
+                $eventUrls[] = $anchor->getAttribute("href");
+            }
+            return array_unique($eventUrls);
         }
     }
 ?>

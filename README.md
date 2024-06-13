@@ -1,2 +1,2 @@
 TODO:
-- Scraping is successful, but there is times where there are not keys for the cleaner to properly operate (use ternary statements to determine if there should be a value present)
+- Run the program to see if I cannot scrape the test fighters info and store it into the DB.
