@@ -10,10 +10,14 @@
     $alphabet = range('a', 'z');
     $scraper = new Scraper();
     foreach ($alphabet as $char) {
-        $scrapedData = $scraper->scrapeFighterUrls("http://ufcstats.com/statistics/fighters?char=" . $char . "&page=all");
-        $urlList = array_merge($urlList, $scrapedData);
-        sleep(1);
-        echo "fighter page acquired";
+        try {
+            $scrapedData = $scraper->scrapeFighterUrls("http://ufcstats.com/statistics/fighters?char=" . $char . "&page=all");
+            $urlList = array_merge($urlList, $scrapedData);
+            sleep(1);
+            echo "fighter page acquired";
+        } catch (Exception $e) {
+            echo "Failed: " . $e->getMessage() . PHP_EOL;
+        }
     }
 
     // Parse the data and post into db
