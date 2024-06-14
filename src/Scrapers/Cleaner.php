@@ -52,12 +52,12 @@
             $stance = key_exists("STANCE:", $scrapedData) ? $scrapedData["STANCE:"] : "N/A";
             $bday = $scrapedData["DOB:"] != "--" ? $this->birthdayConverter($scrapedData["DOB:"]) : "0000-00-00 00:00:00.000";
             $strikesPerMin = $scrapedData["SLpM:"];
-            $strikingAccuracy = "" . intval($scrapedData["Str. Acc.:"]) / 100;
+            $strikingAccuracy = "" . (intval($scrapedData["Str. Acc.:"]) / 100);
             $strikesAbsorbed = $scrapedData["SApM:"];
-            $strikingDefence = "" . intval($scrapedData["Str. Def:"]) / 100;
+            $strikingDefence = "" . (intval($scrapedData["Str. Def:"]) / 100);
             $takedowns = $scrapedData["TD Avg.:"];
-            $takedownAccuracy = "" . intval($scrapedData["TD Acc.:"]) / 100;
-            $takedownDefence = "" . intval($scrapedData["TD Def.:"]) / 100;
+            $takedownAccuracy = "" . (intval($scrapedData["TD Acc.:"]) / 100);
+            $takedownDefence = "" . (intval($scrapedData["TD Def.:"]) / 100);
             $submissionsAttempted = $scrapedData["Sub. Avg.:"];
 
             return new FighterStatsDto(
