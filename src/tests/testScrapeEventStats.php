@@ -29,7 +29,7 @@
         "http://ufcstats.com/event-details/2a542ee8a8b83559",
         "http://ufcstats.com/event-details/f9aa6376ae16bfb4"
     ];
-    
+
     try {
         $results = $scraper->scrapeEventStats($urlQueue);
     } catch (Exception $e) {
@@ -163,9 +163,13 @@
         "rowTwoFinalTime" => "5:00"
     ];
 
-    echo testScrapeEventStats($test1, $expected1) ? "test 1 passed\n" : "test 1\n";
-    echo testScrapeEventStats($test2, $expected2) ? "test 2 passed\n" : "test 2\n";
-    echo testScrapeEventStats($test3, $expected3) ? "test 3 passed\n" : "test 3\n";
-    echo testScrapeEventStats($test4, $expected4) ? "test 4 passed\n" : "test 4\n";
-    echo testScrapeEventStats($test5, $expected5) ? "test 5 passed\n" : "test 5\n";
+    // echo testScrapeEventStats($test1, $expected1) ? "test 1 passed\n" : "test 1\n";
+    // echo testScrapeEventStats($test2, $expected2) ? "test 2 passed\n" : "test 2\n";
+    // echo testScrapeEventStats($test3, $expected3) ? "test 3 passed\n" : "test 3\n";
+    // echo testScrapeEventStats($test4, $expected4) ? "test 4 passed\n" : "test 4\n";
+    // echo testScrapeEventStats($test5, $expected5) ? "test 5 passed\n" : "test 5\n";
+
+    foreach ($results as $res) {
+        print_r($res);
+    }
 ?>

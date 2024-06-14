@@ -3,7 +3,7 @@
 
     use Rjpinks\UfcScraper\Dto\FighterStatsDto;
 
-    class Cleaner
+    class Mapper
     {
         public function __construct()
         {

@@ -1,10 +1,10 @@
 <?php
     require '../../vendor/autoload.php';
 
-    use Rjpinks\UfcScraper\Scrapers\Cleaner;
+    use Rjpinks\UfcScraper\Scrapers\Mapper;
     use Rjpinks\UfcScraper\Dto\FighterStatsDto;
 
-    $cleaner = new Cleaner();
+    $mapper = new Mapper();
 
     function dtoComparer(FighterStatsDto $test, FighterStatsDto $expected): bool
     {
@@ -78,7 +78,7 @@
         return $allTrue;
     }
 
-    $test1 = $cleaner->scrapedFighterStatsToDtoMapper([
+    $test1 = $mapper->scrapedFighterStatsToDtoMapper([
         // url: http://ufcstats.com/fighter-details/029eaff01e6bb8f0
         "Height:" => "5' 9\"",
         "Weight:" => "155 lbs.",
@@ -96,7 +96,7 @@
         "fullName" => "Dustin Poirier",
         "record" => "Record: 30-9-0 (1 NC)",
     ]);
-    $test2 = $cleaner->scrapedFighterStatsToDtoMapper([
+    $test2 = $mapper->scrapedFighterStatsToDtoMapper([
         // url: http://ufcstats.com/fighter-details/f4c49976c75c5ab2
         "Height:" => "5' 9\"",
         "Weight:" => "155 lbs.",
@@ -114,7 +114,7 @@
         "fullName" => "Conor McGregor",
         "record" => "Record: 22-6-0",
     ]);
-    $test3 = $cleaner->scrapedFighterStatsToDtoMapper([
+    $test3 = $mapper->scrapedFighterStatsToDtoMapper([
         // url: http://ufcstats.com/fighter-details/032cc3922d871c7f
         "Height:" => "5' 10\"",
         "Weight:" => "155 lbs.",
@@ -132,7 +132,7 @@
         "fullName" => "Khabib Nurmagomedov",
         "record" => "Record: 29-0-0",
     ]);
-    $test4 = $cleaner->scrapedFighterStatsToDtoMapper([
+    $test4 = $mapper->scrapedFighterStatsToDtoMapper([
         // url: http://ufcstats.com/fighter-details/88be62d6c1e6dadb
         "Height:" => "--",
         "Weight:" => "125 lbs.",
@@ -149,7 +149,7 @@
         "fullName" => "Jose Ochoa",
         "record" => "Record: 7-0-0",
     ]);
-    $test5 = $cleaner->scrapedFighterStatsToDtoMapper([
+    $test5 = $mapper->scrapedFighterStatsToDtoMapper([
         // url: http://ufcstats.com/fighter-details/b361180739bed4b0
         "Height:" => "6' 0\"",
         "Weight:" => "265 lbs.",

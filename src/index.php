@@ -3,7 +3,7 @@
 
     use Rjpinks\UfcScraper\ConnectionClasses\SQLiteConnection;
     use Rjpinks\UfcScraper\Scrapers\Scraper;
-    use Rjpinks\UfcScraper\Scrapers\Cleaner;
+    use Rjpinks\UfcScraper\Scrapers\Mapper;
 
     // Gather the URL for each of the fighter's pages.
     $urlList = [];
@@ -21,7 +21,7 @@
     }
 
     // Parse the data and post into db
-    $cleaner = new Cleaner();
+    $mapper = new Mapper();
     $pdo = new SQLiteConnection();
     $connection = $pdo->connect();
 
@@ -29,7 +29,6 @@
 
     $scrapedFighterStats = $scraper->scrapeFighterStats($urlList);
 
-    $insertion = 0;
     try {
         $connection->beginTransaction();
 
@@ -72,7 +71,7 @@
         );
 
         foreach ($scrapedFighterStats as $stat) {
-            $cleanedStat = $cleaner->scrapedFighterStatsToDtoMapper($stat);
+            $cleanedStat = $mapper->scrapedFighterStatsToDtoMapper($stat);
 
             if ($cleanedStat) {
                 $sqlStatement->execute([
