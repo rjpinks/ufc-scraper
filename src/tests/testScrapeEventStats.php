@@ -35,6 +35,7 @@
     } catch (Exception $e) {
         echo "Failed: " . $e->getMessage() . PHP_EOL;
     }
+    print_r($results);
     
     $test1 = [
         "event" => $results[0]["event"],

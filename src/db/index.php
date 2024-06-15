@@ -6,6 +6,7 @@
 
     $pdo->exec("DROP TABLE IF EXISTS fighter");
     $pdo->exec("DROP TABLE IF EXISTS fight");
+    $pdo->exec("DROP TABLE IF EXISTS ufc_event");
 
     $pdo->exec(
         "CREATE TABLE fighter (
@@ -26,16 +27,23 @@
             takedown_accuracy REAL NOT NULL,
             takedown_defence REAL NOT NULL,
             average_submissions_attempted_per_fifteen REAL NOT NULL
-        )");
+        )"
+    );
+    $pdo->exec(
+        "CREATE TABLE ufc_event (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            event_name VARCHAR NOT NULL UNIQUE,
+            date_occurred TEXT NOT NULL, /* DATE: YYYY-MM-DD HH:MM:SS.SSS */
+            event_location VARCHAR NOT NULL
+        )"
+    );
     $pdo->exec(
         "CREATE TABLE fight (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            event_name VARCHAR NOT NULL,
-            date_occurred TEXT NOT NULL,
-            event_location VARCHAR NOT NULL,
+            event_id INTEGER NOT NULL,
             fighter_one_id INTEGER NOT NULL,
             fighter_two_id INTEGER NOT NULL,
-            winner INTEGER NOT NULL,
+            winner_id INTEGER,
             fighter_one_knockdowns INTEGER NOT NULL,
             fighter_one_strikes INTEGER NOT NULL,
             fighter_one_takedowns INTEGER NOT NULL,
@@ -45,15 +53,16 @@
             fighter_two_takedowns INTEGER NOT NULL,
             fighter_two_submission_attempts INTEGER NOT NULL,
             weight_class VARCHAR NOT NULL,
-            ufc_event VARCHAR NOT NULL,
             result_method VARCHAR NOT NULL,
             last_round INTEGER NOT NULL,
             ending_time VARCHAR NOT NULL,
 
             FOREIGN KEY (fighter_one_id) REFERENCES fighter (id),
             FOREIGN KEY (fighter_two_id) REFERENCES fighter (id),
-            FOREIGN KEY (winner) REFERENCES fighter (id)
-        )");
+            FOREIGN KEY (winner_id) REFERENCES fighter (id),
+            FOREIGN KEY (event_id) REFERENCES ufc_event (id)
+        )"
+    );
 
     $pdo = null;
 

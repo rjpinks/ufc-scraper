@@ -17,7 +17,7 @@
             $this->converter = new CssSelectorConverter();
         }
 
-        public function scrapeFighterUrls(String $url): Array
+        public function scrapeFighterUrls(String $url): Array /* $urlsStack */
         {
             // obtain HTML, convert to XML, and use XPath (from CssConverter) to find the important HTML elements.
             $this->browser->request('GET', $url);
@@ -40,7 +40,7 @@
         }
 
         // urls should be the result of scrapeFighterUrls
-        public function scrapeFighterStats(Array $urls): Array
+        public function scrapeFighterStats(Array $urls): Array /* $fighterStatsStack */
         {
             $masterStats = [];
             foreach ($urls as $url) {
@@ -62,7 +62,6 @@
                     if ($li->getElementsByTagName("i")->item(0)) {
                         $nestedElText = $li->getElementsByTagName("i")->item(0)->textContent;
                     } else {
-                        // echo "Skipped one nestedElText\n";
                         continue;
                     }
                     
@@ -70,7 +69,6 @@
                     if ($li->textContent) {
                         $liText = $li->textContent;
                     } else {
-                        // echo "Skipped one liText\n";
                         continue;
                     }
                     $nestedElText = trim($nestedElText);
@@ -79,10 +77,7 @@
 
                     if ($liText && $nestedElText) {
                         $fighterStatsMap[$nestedElText] = $liText;
-                    } 
-                    // else {
-                    //     echo "Something went wrong my dude!\n";
-                    // }
+                    }
                 }
 
                 // add fighter name and record
@@ -104,7 +99,7 @@
             return $masterStats;
         }
 
-        public function scrapeEventUrls(String $url): Array
+        public function scrapeEventUrls(String $url): Array /* $urlsStack */
         {
             $this->browser->request("GET", $url);
             $content = $this->browser->getResponse()->getContent();
@@ -126,11 +121,11 @@
         }
 
         // urls should be the result of scrapeEventUrls
-        public function scrapeEventStats(Array $urlsQueue): Array
+        public function scrapeEventStats(Array $urlsStack): Array /* $eventStatsStack */
         {
-            $masterStats = [];
-            while ($urlsQueue) {
-                $url = array_shift($urlsQueue);
+            $eventStackStack = [];
+            while ($urlsStack) {
+                $url = array_pop($urlsStack);
                 $this->browser->request("GET", $url);
                 $content = $this->browser->getResponse()->getContent();
 
@@ -178,8 +173,6 @@
                     $rowData = [];
                     $tableColumns = $row->getElementsByTagName("td");
                     
-                    // $columnOne or W/L is unnecessary because fighterOne is always the winner
-
                     if ($tableColumns->length == 10) {
                         $columnOne = $tableColumns->item(0);
                         $columnOneChildren = $columnOne->getElementsByTagName("p");
@@ -236,9 +229,9 @@
                         Throw new \Exception("there was not 10 table rows");
                     }
                 }
-                $masterStats[] = $pageStats;
+                $eventStackStack[] = $pageStats;
             }
-            return $masterStats;
+            return $eventStackStack;
         }
     }
 ?>
