@@ -40,62 +40,60 @@
         }
 
         // urls should be the result of scrapeFighterUrls
-        public function scrapeFighterStats(Array $urls): Array /* $fighterStatsStack */
+        public function scrapeFighterStats(String $url): Array /* $fighterStatsStack */
         {
-            $masterStats = [];
-            foreach ($urls as $url) {
-                $this->browser->request("GET", $url);
-                $content = $this->browser->getResponse()->getContent();
+            $this->browser->request("GET", $url);
+            $content = $this->browser->getResponse()->getContent();
 
-                libxml_use_internal_errors(true);
+            libxml_use_internal_errors(true);
     
-                $doc = new \DOMDocument();
-                $doc->loadHTML($content);
-                $xmlDocument = new \DOMXPath($doc);
-                $xPathExpression = $this->converter->toXPath("div > ul > li");
-                $listItems = $xmlDocument->evaluate($xPathExpression);
+            $doc = new \DOMDocument();
+            $doc->loadHTML($content);
+            $xmlDocument = new \DOMXPath($doc);
+            $xPathExpression = $this->converter->toXPath("div > ul > li");
+            $listItems = $xmlDocument->evaluate($xPathExpression);
 
-                // clean the data
-                $fighterStatsMap = [];
-                foreach ($listItems as $li) {
-                    $nestedElText = null;
-                    if ($li->getElementsByTagName("i")->item(0)) {
-                        $nestedElText = $li->getElementsByTagName("i")->item(0)->textContent;
-                    } else {
-                        continue;
-                    }
+            // clean the data
+            $fighterStatsMap = [];
+            foreach ($listItems as $li) {
+                $nestedElText = null;
+                if ($li->getElementsByTagName("i")->item(0)) {
+                    $nestedElText = $li->getElementsByTagName("i")->item(0)->textContent;
+                } else {
+                    continue;
+                }
                     
-                    $liText = null;
-                    if ($li->textContent) {
-                        $liText = $li->textContent;
-                    } else {
-                        continue;
-                    }
-                    $nestedElText = trim($nestedElText);
-                    $liText = str_replace($nestedElText, '', $liText);
-                    $liText = trim($liText);
-
-                    if ($liText && $nestedElText) {
-                        $fighterStatsMap[$nestedElText] = $liText;
-                    }
-                }
-
-                // add fighter name and record
-                $xPathExpression = $this->converter->toXPath("h2 > span");
-                $spanElements = $xmlDocument->evaluate($xPathExpression);
-                if ($spanElements[0]->textContent) {
-                    $fighterStatsMap["fullName"] = trim($spanElements[0]->textContent);
+                $liText = null;
+                if ($li->textContent) {
+                    $liText = $li->textContent;
                 } else {
-                    echo "There's a problem with spanElement[0]";
+                    continue;
                 }
-                if ($spanElements[1]->textContent) {
-                    $fighterStatsMap["record"] = trim($spanElements[1]->textContent);
-                } else {
-                    echo "There's a problem with spanElement[1]";
-                }
+                $nestedElText = trim($nestedElText);
+                $liText = str_replace($nestedElText, '', $liText);
+                $liText = trim($liText);
 
-                $masterStats[] = $fighterStatsMap;
+                if ($liText && $nestedElText) {
+                    $fighterStatsMap[$nestedElText] = $liText;
                 }
+            }
+
+            // add fighter name and record
+            $xPathExpression = $this->converter->toXPath("h2 > span");
+            $spanElements = $xmlDocument->evaluate($xPathExpression);
+            if ($spanElements[0]->textContent) {
+                $fighterStatsMap["fullName"] = trim($spanElements[0]->textContent);
+            } else {
+                echo "There's a problem with spanElement[0]";
+            }
+            if ($spanElements[1]->textContent) {
+                $fighterStatsMap["record"] = trim($spanElements[1]->textContent);
+            } else {
+                echo "There's a problem with spanElement[1]";
+            }
+
+            $masterStats = $fighterStatsMap;
+            
             return $masterStats;
         }
 
@@ -230,6 +228,7 @@
                     }
                 }
                 $eventStackStack[] = $pageStats;
+                sleep(1);
             }
             return $eventStackStack;
         }

@@ -1,110 +1,62 @@
 <?php
     require '../vendor/autoload.php';
 
-    use Rjpinks\UfcScraper\ConnectionClasses\SQLiteConnection;
     use Rjpinks\UfcScraper\Scrapers\Scraper;
     use Rjpinks\UfcScraper\Scrapers\Mapper;
+    use Rjpinks\UfcScraper\ConnectionClasses\SQLiteConnection;
 
-    // Gather the URL for each of the fighter's pages.
     $urlStack = [];
-    $alphabet = range('a', 'z');
+    $alphabet = range("a", "z");
     $scraper = new Scraper();
-    foreach ($alphabet as $char) {
-        try {
-            $scrapedData = $scraper->scrapeFighterUrls("http://ufcstats.com/statistics/fighters?char=" . $char . "&page=all");
-            $urlStack = array_merge($urlStack, $scrapedData);
-            sleep(1);
-            echo "fighter page acquired";
-        } catch (Exception $e) {
-            echo "Failed: " . $e->getMessage() . PHP_EOL;
-        }
+    foreach ($alphabet as $letter) {
+        $url = "http://ufcstats.com/statistics/fighters?char=". $letter . "&page=all";
+        $scrapedPage = $scraper->scrapeFighterUrls($url);
+        $urlStack = array_merge($urlStack, $scrapedPage);
+        sleep(1);
     }
 
-    // Parse the data and post into db
+    echo "all fighter urls scraped\n";
+
     $mapper = new Mapper();
-    $pdo = new SQLiteConnection();
-    $connection = $pdo->connect();
+    $pdo = new SQLiteConnection;
+    while ($urlStack) {
+        $url = array_pop($urlStack);
 
-    echo "stat scraping has begun\n";
+        $scrapedFighterStats = $scraper->scrapeFighterStats($url);
+        $fighterStatsDto = $mapper->scrapedFighterStatsToDtoMapper($scrapedFighterStats);
 
-    $scrapedFighterStats = $scraper->scrapeFighterStats($urlStack);
-
-    try {
-        $connection->beginTransaction();
-
-        $sqlStatement = $connection->prepare(
-            "INSERT INTO fighter (
-                first_name,
-                last_name,
-                record,
-                height_inches,
-                weight_in_lbs,
-                reach_inches,
-                stance,
-                birthdate,
-                strikes_landed_per_min,
-                striking_accuracy,
-                strikes_absorbed_per_min,
-                striking_defence,
-                average_takedowns_per_fifteen,
-                takedown_accuracy,
-                takedown_defence,
-                average_submissions_attempted_per_fifteen
-            ) VALUES (
-                :first_name,
-                :last_name,
-                :record,
-                :height_inches,
-                :weight_in_lbs,
-                :reach_inches,
-                :stance,
-                :birthdate,
-                :strikes_landed_per_min,
-                :striking_accuracy,
-                :strikes_absorbed_per_min,
-                :striking_defence,
-                :average_takedowns_per_fifteen,
-                :takedown_accuracy,
-                :takedown_defence,
-                :average_submissions_attempted_per_fifteen
-            )"
-        );
-
-        while ($scrapedFighterStats) {
-            $stat = array_pop($scrapedFighterStats);
-            $cleanedStat = $mapper->scrapedFighterStatsToDtoMapper($stat);
-
-            if ($cleanedStat) {
-                $sqlStatement->execute([
-                    ':first_name' => $cleanedStat->firstName,
-                    ':last_name' => $cleanedStat->lastName,
-                    ':record' => $cleanedStat->record,
-                    ':height_inches' => $cleanedStat->height,
-                    ':weight_in_lbs' => $cleanedStat->weight,
-                    ':reach_inches' => $cleanedStat->reach,
-                    ':stance' => $cleanedStat->stance,
-                    ':birthdate' => $cleanedStat->birthdate,
-                    ':strikes_landed_per_min' => $cleanedStat->strikesPerMin,
-                    ':striking_accuracy' => $cleanedStat->strikeAccuracy,
-                    ':strikes_absorbed_per_min' => $cleanedStat->strikesAbsorbed,
-                    ':striking_defence' => $cleanedStat->strikeDefence,
-                    ':average_takedowns_per_fifteen' => $cleanedStat->takedowns,
-                    ':takedown_accuracy' => $cleanedStat->takedownAccuracy,
-                    ':takedown_defence' => $cleanedStat->takedownDefence,
-                    ':average_submissions_attempted_per_fifteen' => $cleanedStat->submissionAttempts,
-                ]);
-                echo "Entry Made\n";
-            } else {
-                $connection->rollBack();
-                Throw new Exception("cleanedStat failed to map\n");
-            }
-            sleep(1);
-        }
-         $connection->commit();
-    } catch (Exception $e) {
-        $connection->rollBack();
-        echo "Failed: " . $e->getMessage() . PHP_EOL;
+        $connection = $pdo->connect();
+        $pdo->insertFighterData($connection, $fighterStatsDto);
+        $connection = null;
+        sleep(1);
     }
 
-    $connection = null;
+    echo "urlStack depleted--now scraping events\n";
+
+    $urlStack = $scraper->scrapeEventUrls("http://ufcstats.com/statistics/events/completed?page=all");
+    sleep(1);
+
+    $eventStatsStack = $scraper->scrapeEventStats($urlStack);
+    $currentEvent = 1;
+    while ($eventStatsStack) {
+        $eventStats = array_pop($eventStatsStack);
+        $eventDataDto = $mapper->scrapedEventsToEventDataDtoMapper($eventStats);
+
+        $connection = $pdo->connect();
+        $pdo->insertEventData($connection, $eventDataDto);
+        $connection = null;
+        
+        while (count($eventStats) > 3) {
+            $row = array_pop($eventStats);
+            $fightStatsDto = $mapper->scrapedEventsToFightStatsDtoMapper($row, $currentEvent);
+
+            $connection = $pdo->connect();
+            $pdo->insertFightData($connection, $fightStatsDto);
+            $connection = null;
+        }
+
+        $currentEvent++;
+    }
+
+    echo "scraping complete!";
 ?>

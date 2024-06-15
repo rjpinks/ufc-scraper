@@ -3,10 +3,10 @@
 
     use Rjpinks\UfcScraper\Scrapers\Scraper;
 
-    function testScrapeFighterStats(Array $urls): Array
+    function testScrapeFighterStats(String $url): Array
     {
         $scraper = new Scraper();
-        return $scraper->scrapeFighterStats($urls);
+        return $scraper->scrapeFighterStats($url);
     }
 
     // tests:
@@ -100,31 +100,31 @@
         "record" => "Record: 10-15-0",
     ];
 
-    if ([$test1] == testScrapeFighterStats(["http://ufcstats.com/fighter-details/029eaff01e6bb8f0"])) {
+    if ($test1 == testScrapeFighterStats("http://ufcstats.com/fighter-details/029eaff01e6bb8f0")) {
         echo "test 1 pass\n";
     } else {
         echo "!!!!!!!!!!!!!!!!!!!TEST 1 FAILED!!!!!!!!!!!!!!!!!!!!!\n";
     }
 
-    if ([$test2] == testScrapeFighterStats(["http://ufcstats.com/fighter-details/f4c49976c75c5ab2"])) {
+    if ($test2 == testScrapeFighterStats("http://ufcstats.com/fighter-details/f4c49976c75c5ab2")) {
         echo "test 2 pass\n";
     } else {
         echo "!!!!!!!!!!!!!!!!!!!TEST 2 FAILED!!!!!!!!!!!!!!!!!!!!!\n";
     }
 
-    if ([$test3] == testScrapeFighterStats(["http://ufcstats.com/fighter-details/032cc3922d871c7f"])) {
+    if ($test3 == testScrapeFighterStats("http://ufcstats.com/fighter-details/032cc3922d871c7f")) {
         echo "test 3 pass\n";
     } else {
         echo "!!!!!!!!!!!!!!!!!!!TEST 3 FAILED!!!!!!!!!!!!!!!!!!!!!\n";
     }
 
-    if ([$test4] == testScrapeFighterStats(["http://ufcstats.com/fighter-details/88be62d6c1e6dadb"])) {
+    if ($test4 == testScrapeFighterStats("http://ufcstats.com/fighter-details/88be62d6c1e6dadb")) {
         echo "test 4 pass\n";
     } else {
         echo "!!!!!!!!!!!!!!!!!!!TEST 4 FAILED!!!!!!!!!!!!!!!!!!!!!\n";
     }
 
-    if ([$test5] == testScrapeFighterStats(["http://ufcstats.com/fighter-details/b361180739bed4b0"])) {
+    if ($test5 == testScrapeFighterStats("http://ufcstats.com/fighter-details/b361180739bed4b0")) {
         echo "test 5 pass\n";
     } else {
         echo "!!!!!!!!!!!!!!!!!!!TEST 5 FAILED!!!!!!!!!!!!!!!!!!!!!\n";
