@@ -35,19 +35,18 @@
     } catch (Exception $e) {
         echo "Failed: " . $e->getMessage() . PHP_EOL;
     }
-    print_r($results);
     
     $test1 = [
-        "event" => $results[0]["event"],
-        "date" => $results[0]["date"],
-        "location" => $results[0]["location"],
-        "rowOneFighterTwo" => $results[0]["row1"]["fighterTwo"],
-        "rowThreeFighterOne" => $results[0]["row3"]["fighterOne"],
-        "rowSevenFighterOneStr" => $results[0]["row7"]["fighterOneStr"],
-        "rowFiveFighterTwoKd" => $results[0]["row5"]["fighterTwoKd"],
-        "rowTenWeightClass" => $results[0]["row10"]["weightClass"],
-        "rowEightMethod" => $results[0]["row8"]["method"],
-        "rowTwoFinalTime" => $results[0]["row2"]["finalTime"]
+        "event" => $results[4]["event"],
+        "date" => $results[4]["date"],
+        "location" => $results[4]["location"],
+        "rowOneFighterTwo" => $results[4]["row1"]["fighterTwo"],
+        "rowThreeFighterOne" => $results[4]["row3"]["fighterOne"],
+        "rowSevenFighterOneStr" => $results[4]["row7"]["fighterOneStr"],
+        "rowFiveFighterTwoKd" => $results[4]["row5"]["fighterTwoKd"],
+        "rowTenWeightClass" => $results[4]["row10"]["weightClass"],
+        "rowEightMethod" => $results[4]["row8"]["method"],
+        "rowTwoFinalTime" => $results[4]["row2"]["finalTime"]
     ];
     $expected1 = [
         // url => http://ufcstats.com/event-details/cba3a2dfbc06ce79
@@ -63,16 +62,16 @@
         "rowTwoFinalTime" => "2:00"
     ];
     $test2 = [
-        "event" => $results[1]["event"],
-        "date" => $results[1]["date"],
-        "location" => $results[1]["location"],
-        "rowOneFighterTwo" => $results[1]["row1"]["fighterTwo"],
-        "rowThreeFighterOne" => $results[1]["row3"]["fighterOne"],
-        "rowSevenFighterOneStr" => $results[1]["row7"]["fighterOneStr"],
-        "rowFiveFighterTwoKd" => $results[1]["row5"]["fighterTwoKd"],
-        "rowTenWeightClass" => $results[1]["row10"]["weightClass"],
-        "rowEightMethod" => $results[1]["row8"]["method"],
-        "rowTwoFinalTime" => $results[1]["row2"]["finalTime"]
+        "event" => $results[3]["event"],
+        "date" => $results[3]["date"],
+        "location" => $results[3]["location"],
+        "rowOneFighterTwo" => $results[3]["row1"]["fighterTwo"],
+        "rowThreeFighterOne" => $results[3]["row3"]["fighterOne"],
+        "rowSevenFighterOneStr" => $results[3]["row7"]["fighterOneStr"],
+        "rowFiveFighterTwoKd" => $results[3]["row5"]["fighterTwoKd"],
+        "rowTenWeightClass" => $results[3]["row10"]["weightClass"],
+        "rowEightMethod" => $results[3]["row8"]["method"],
+        "rowTwoFinalTime" => $results[3]["row2"]["finalTime"]
     ];
     $expected2 = [
         // url => http://ufcstats.com/event-details/a6a9ab5a824e8f66
@@ -113,16 +112,16 @@
         "rowTwoFinalTime" => "5:00"
     ];
     $test4 = [
-        "event" => $results[3]["event"],
-        "date" => $results[3]["date"],
-        "location" => $results[3]["location"],
-        "rowOneFighterTwo" => $results[3]["row1"]["fighterTwo"],
-        "rowThreeFighterOne" => $results[3]["row3"]["fighterOne"],
-        "rowSevenFighterOneStr" => $results[3]["row7"]["fighterOneStr"],
-        "rowFiveFighterTwoKd" => $results[3]["row5"]["fighterTwoKd"],
-        "rowTenWeightClass" => $results[3]["row10"]["weightClass"],
-        "rowEightMethod" => $results[3]["row8"]["method"],
-        "rowTwoFinalTime" => $results[3]["row2"]["finalTime"]
+        "event" => $results[1]["event"],
+        "date" => $results[1]["date"],
+        "location" => $results[1]["location"],
+        "rowOneFighterTwo" => $results[1]["row1"]["fighterTwo"],
+        "rowThreeFighterOne" => $results[1]["row3"]["fighterOne"],
+        "rowSevenFighterOneStr" => $results[1]["row7"]["fighterOneStr"],
+        "rowFiveFighterTwoKd" => $results[1]["row5"]["fighterTwoKd"],
+        "rowTenWeightClass" => $results[1]["row10"]["weightClass"],
+        "rowEightMethod" => $results[1]["row8"]["method"],
+        "rowTwoFinalTime" => $results[1]["row2"]["finalTime"]
     ];
     $expected4 = [
         // url => http://ufcstats.com/event-details/2a542ee8a8b83559
@@ -139,16 +138,16 @@
     ];
     $test5 = [
         // url => "http://ufcstats.com/event-details/f9aa6376ae16bfb4"
-        "event" => $results[4]["event"],
-        "date" => $results[4]["date"],
-        "location" => $results[4]["location"],
-        "rowOneFighterTwo" => $results[4]["row1"]["fighterTwo"],
-        "rowThreeFighterOne" => $results[4]["row3"]["fighterOne"],
-        "rowSevenFighterOneStr" => $results[4]["row7"]["fighterOneStr"],
-        "rowFiveFighterTwoKd" => $results[4]["row5"]["fighterTwoKd"],
-        "rowTenWeightClass" => $results[4]["row10"]["weightClass"],
-        "rowEightMethod" => $results[4]["row8"]["method"],
-        "rowTwoFinalTime" => $results[4]["row2"]["finalTime"]
+        "event" => $results[0]["event"],
+        "date" => $results[0]["date"],
+        "location" => $results[0]["location"],
+        "rowOneFighterTwo" => $results[0]["row1"]["fighterTwo"],
+        "rowThreeFighterOne" => $results[0]["row3"]["fighterOne"],
+        "rowSevenFighterOneStr" => $results[0]["row7"]["fighterOneStr"],
+        "rowFiveFighterTwoKd" => $results[0]["row5"]["fighterTwoKd"],
+        "rowTenWeightClass" => $results[0]["row10"]["weightClass"],
+        "rowEightMethod" => $results[0]["row8"]["method"],
+        "rowTwoFinalTime" => $results[0]["row2"]["finalTime"]
     ];
     $expected5 = [
         // url => http://ufcstats.com/event-details/f9aa6376ae16bfb4
@@ -164,13 +163,9 @@
         "rowTwoFinalTime" => "5:00"
     ];
 
-    // echo testScrapeEventStats($test1, $expected1) ? "test 1 passed\n" : "test 1\n";
-    // echo testScrapeEventStats($test2, $expected2) ? "test 2 passed\n" : "test 2\n";
-    // echo testScrapeEventStats($test3, $expected3) ? "test 3 passed\n" : "test 3\n";
-    // echo testScrapeEventStats($test4, $expected4) ? "test 4 passed\n" : "test 4\n";
-    // echo testScrapeEventStats($test5, $expected5) ? "test 5 passed\n" : "test 5\n";
-
-    foreach ($results as $res) {
-        print_r($res);
-    }
+    echo testScrapeEventStats($test1, $expected1) ? "test 1 passed\n" : "test 1\n";
+    echo testScrapeEventStats($test2, $expected2) ? "test 2 passed\n" : "test 2\n";
+    echo testScrapeEventStats($test3, $expected3) ? "test 3 passed\n" : "test 3\n";
+    echo testScrapeEventStats($test4, $expected4) ? "test 4 passed\n" : "test 4\n";
+    echo testScrapeEventStats($test5, $expected5) ? "test 5 passed\n" : "test 5\n";
 ?>
