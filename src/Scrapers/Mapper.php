@@ -83,8 +83,6 @@
         // clean the scraped fighter stat data and convert it into a defined object
         public function scrapedFighterStatsToDtoMapper(Array $scrapedData): FighterStatsDto
         {
-            
-
             $explodedName = explode(" ", $scrapedData["fullName"], 2);
 
             $firstName = $explodedName[0];

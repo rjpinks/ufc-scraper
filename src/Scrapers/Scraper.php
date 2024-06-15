@@ -17,7 +17,7 @@
             $this->converter = new CssSelectorConverter();
         }
 
-        public function scrapeFighterUrls(String $url): Array /* $urlsStack */
+        public function scrapeFighterUrls(String $url): Array /* $urlStack */
         {
             // obtain HTML, convert to XML, and use XPath (from CssConverter) to find the important HTML elements.
             $this->browser->request('GET', $url);

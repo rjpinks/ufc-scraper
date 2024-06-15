@@ -6,13 +6,13 @@
     use Rjpinks\UfcScraper\Scrapers\Mapper;
 
     // Gather the URL for each of the fighter's pages.
-    $urlList = [];
+    $urlStack = [];
     $alphabet = range('a', 'z');
     $scraper = new Scraper();
     foreach ($alphabet as $char) {
         try {
             $scrapedData = $scraper->scrapeFighterUrls("http://ufcstats.com/statistics/fighters?char=" . $char . "&page=all");
-            $urlList = array_merge($urlList, $scrapedData);
+            $urlStack = array_merge($urlStack, $scrapedData);
             sleep(1);
             echo "fighter page acquired";
         } catch (Exception $e) {
@@ -27,7 +27,7 @@
 
     echo "stat scraping has begun\n";
 
-    $scrapedFighterStats = $scraper->scrapeFighterStats($urlList);
+    $scrapedFighterStats = $scraper->scrapeFighterStats($urlStack);
 
     try {
         $connection->beginTransaction();
@@ -70,7 +70,8 @@
             )"
         );
 
-        foreach ($scrapedFighterStats as $stat) {
+        while ($scrapedFighterStats) {
+            $stat = array_pop($scrapedFighterStats);
             $cleanedStat = $mapper->scrapedFighterStatsToDtoMapper($stat);
 
             if ($cleanedStat) {
