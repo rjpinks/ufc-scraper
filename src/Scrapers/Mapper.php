@@ -63,7 +63,12 @@
 
         private function queryFighterId(String $fullName): int
         {
-            [$first, $last] = explode(" ", $fullName, 2);
+            $explodedName = explode(" ", $fullName, 2);
+            [$first, $last] = "";
+            if (count($explodedName) == 1) {
+                $first = "N/A";
+                $last = $explodedName[0];
+            }
             $pdo = new SQLiteConnection();
             $connection = $pdo->connect();
 
@@ -85,8 +90,8 @@
         {
             $explodedName = explode(" ", $scrapedData["fullName"], 2);
 
-            $firstName = $explodedName[0];
-            $lastName = $explodedName[1];
+            $firstName = count($explodedName) == 1 ? "N/A" : $explodedName[0];
+            $lastName = count($explodedName) == 1 ? $explodedName[0] : $explodedName[1];
             $record = substr($scrapedData["record"], 8);
             $height = $scrapedData["Height:"] == "--" ? "0" : $this->feetToInches($scrapedData["Height:"]);
             $weight = trim(substr($scrapedData["Weight:"], 0, 3));

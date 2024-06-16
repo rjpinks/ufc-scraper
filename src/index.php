@@ -12,6 +12,7 @@
         $url = "http://ufcstats.com/statistics/fighters?char=". $letter . "&page=all";
         $scrapedPage = $scraper->scrapeFighterUrls($url);
         $urlStack = array_merge($urlStack, $scrapedPage);
+        echo "page of fighters scraped\n";
         sleep(1);
     }
 
@@ -28,12 +29,14 @@
         $connection = $pdo->connect();
         $pdo->insertFighterData($connection, $fighterStatsDto);
         $connection = null;
+        echo "fighter data scraped, mapped, and inserted\n";
         sleep(1);
     }
 
     echo "urlStack depleted--now scraping events\n";
 
     $urlStack = $scraper->scrapeEventUrls("http://ufcstats.com/statistics/events/completed?page=all");
+    echo "event urls scraped\n";
     sleep(1);
 
     $eventStatsStack = $scraper->scrapeEventStats($urlStack);
@@ -55,6 +58,7 @@
             $connection = null;
         }
 
+        echo "an event was scrapped, mapped, and inserted into appropriate tables\n";
         $currentEvent++;
     }
 
