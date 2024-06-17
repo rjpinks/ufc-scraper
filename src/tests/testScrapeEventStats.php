@@ -13,7 +13,7 @@
         for ($i = 0; $i < count($criteria); $i++) {
             $key = $criteria[$i];
             if ($test[$key] != $expected[$key]) {
-                echo "test" . $test[$key] . " expected" . $expected[$key] . " $key failed ";
+                echo "test: " . $test[$key] . " expected: " . $expected[$key] . " $key failed \n";
                 return false;
             }
         }
@@ -22,7 +22,8 @@
     
     $scraper = new Scraper();
     $results = null;
-    $urlQueue = [
+    $urlStack = [
+        "",
         "http://ufcstats.com/event-details/cba3a2dfbc06ce79",
         "http://ufcstats.com/event-details/a6a9ab5a824e8f66",
         "http://ufcstats.com/event-details/279093302a6f44b3",
@@ -31,10 +32,12 @@
     ];
 
     try {
-        $results = $scraper->scrapeEventStats($urlQueue);
+        $results = $scraper->scrapeEventStats($urlStack);
     } catch (Exception $e) {
         echo "Failed: " . $e->getMessage() . PHP_EOL;
     }
+
+    print_r($results);
     
     $test1 = [
         "event" => $results[4]["event"],

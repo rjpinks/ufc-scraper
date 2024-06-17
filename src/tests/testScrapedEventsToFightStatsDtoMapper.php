@@ -5,6 +5,11 @@
     use Rjpinks\UfcScraper\Scrapers\Mapper;
     use Rjpinks\UfcScraper\Dto\FightStatsDto;
 
+    /*
+    This mapper queries the database using the names taken from the fight to find the fighter's ID number.
+    This is the main purpose for the src/db/testingSeeds.php file.
+    */
+
     function testScrapedEventsToFightStatsDtoMapper(FightStatsDto $test, FightStatsDto $expected): bool
     {
         $passing = true;
@@ -78,7 +83,10 @@
     $scraper = new Scraper();
     $mapper = new Mapper();
 
-    $results = $scraper->scrapeEventStats(["http://ufcstats.com/event-details/cba3a2dfbc06ce79"]);
+    $results = $scraper->scrapeEventStats(["", "http://ufcstats.com/event-details/cba3a2dfbc06ce79"]);
+    
+    print_r($results);
+
     $data = $results[0];
 
     $tests = [];

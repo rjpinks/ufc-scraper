@@ -64,10 +64,14 @@
         private function queryFighterId(String $fullName): int
         {
             $explodedName = explode(" ", $fullName, 2);
-            [$first, $last] = "";
+            $first = "";
+            $last = "";
             if (count($explodedName) == 1) {
                 $first = "N/A";
                 $last = $explodedName[0];
+            } else {
+                $first = $explodedName[0];
+                $last = $explodedName[1];
             }
             $pdo = new SQLiteConnection();
             $connection = $pdo->connect();

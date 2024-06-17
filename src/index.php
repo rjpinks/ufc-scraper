@@ -41,6 +41,7 @@
 
     $eventStatsStack = $scraper->scrapeEventStats($urlStack);
     $currentEvent = 1;
+    echo "event mapping begun\n";
     while ($eventStatsStack) {
         $eventStats = array_pop($eventStatsStack);
         $eventDataDto = $mapper->scrapedEventsToEventDataDtoMapper($eventStats);

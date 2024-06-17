@@ -122,7 +122,7 @@
         public function scrapeEventStats(Array $urlsStack): Array /* $eventStatsStack */
         {
             $eventStackStack = [];
-            while ($urlsStack) {
+            while (count($urlsStack) > 1) {
                 $url = array_pop($urlsStack);
                 $this->browser->request("GET", $url);
                 $content = $this->browser->getResponse()->getContent();
@@ -228,6 +228,7 @@
                     }
                 }
                 $eventStackStack[] = $pageStats;
+                echo "event scraped";
                 sleep(1);
             }
             return $eventStackStack;

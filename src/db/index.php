@@ -9,7 +9,7 @@
     $pdo->exec("DROP TABLE IF EXISTS ufc_event");
 
     $pdo->exec(
-        "CREATE TABLE fighter (
+        "CREATE TABLE IF NOT EXISTS fighter (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             first_name VARCHAR NOT NULL,
             last_name VARCHAR NOT NULL,
@@ -30,7 +30,7 @@
         )"
     );
     $pdo->exec(
-        "CREATE TABLE ufc_event (
+        "CREATE TABLE IF NOT EXISTS ufc_event (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             event_name VARCHAR NOT NULL UNIQUE,
             date_occurred TEXT NOT NULL, /* DATE: YYYY-MM-DD HH:MM:SS.SSS */
@@ -38,7 +38,7 @@
         )"
     );
     $pdo->exec(
-        "CREATE TABLE fight (
+        "CREATE TABLE IF NOT EXISTS fight (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             event_id INTEGER NOT NULL,
             fighter_one_id INTEGER NOT NULL,

@@ -5,6 +5,9 @@
 
     $scraper = new Scraper();
     $scrapedUrls = $scraper->scrapeEventUrls("http://ufcstats.com/statistics/events/completed?page=all");
+    array_shift($scrapedUrls);
+
+    print_r($scrapedUrls);
 
     // tests:
     $last = count($scrapedUrls) - 1;
