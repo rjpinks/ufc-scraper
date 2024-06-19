@@ -83,11 +83,11 @@
     $scraper = new Scraper();
     $mapper = new Mapper();
 
-    $results = $scraper->scrapeEventStats(["", "http://ufcstats.com/event-details/cba3a2dfbc06ce79"]);
+    $results = $scraper->scrapeEventStats("http://ufcstats.com/event-details/cba3a2dfbc06ce79");
     
     print_r($results);
 
-    $data = $results[0];
+    $data = $results;
 
     $tests = [];
     $expected = [

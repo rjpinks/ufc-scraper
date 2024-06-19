@@ -119,119 +119,112 @@
         }
 
         // urls should be the result of scrapeEventUrls
-        public function scrapeEventStats(Array $urlsStack): Array /* $eventStatsStack */
+        public function scrapeEventStats(String $url): Array /* $eventStatsStack */
         {
-            $eventStackStack = [];
-            while (count($urlsStack) > 1) {
-                $url = array_pop($urlsStack);
-                $this->browser->request("GET", $url);
-                $content = $this->browser->getResponse()->getContent();
+            $this->browser->request("GET", $url);
+            $content = $this->browser->getResponse()->getContent();
 
-                libxml_use_internal_errors(true);
+            libxml_use_internal_errors(true);
     
-                $doc = new \DOMDocument();
-                $doc->loadHTML($content);
-                $xmlDocument = new \DOMXPath($doc);
+            $doc = new \DOMDocument();
+            $doc->loadHTML($content);
+            $xmlDocument = new \DOMXPath($doc);
 
-                $pageStats = [];
+            $pageStats = [];
 
-                // scrape the event's name off of the top of the page
-                $xPathExpression = $this->converter->toXPath(".b-content__title-highlight");
-                $header = $xmlDocument->evaluate($xPathExpression);
-                if ($header->length > 0) {
-                    $pageStats["event"] = trim($header[0]->textContent);
-                } else {
-                    Throw new \Exception("Event scraping has failed");
-                }
+            // scrape the event's name off of the top of the page
+            $xPathExpression = $this->converter->toXPath(".b-content__title-highlight");
+            $header = $xmlDocument->evaluate($xPathExpression);
+            if ($header->length > 0) {
+                $pageStats["event"] = trim($header[0]->textContent);
+            } else {
+                Throw new \Exception("Event scraping has failed");
+            }
 
-                // scrape the date and location off of the top of the page
-                $xPathExpression = $this->converter->toXPath(".b-list__box-list");
-                $subheader = $xmlDocument->evaluate($xPathExpression);
-                if ($subheader->length > 0 && $subheader[0]->getElementsbyTagName("li")->length > 0) {
-                    $subheaderChildren = $subheader[0]->getElementsbyTagName("li");
+            // scrape the date and location off of the top of the page
+            $xPathExpression = $this->converter->toXPath(".b-list__box-list");
+            $subheader = $xmlDocument->evaluate($xPathExpression);
+            if ($subheader->length > 0 && $subheader[0]->getElementsbyTagName("li")->length > 0) {
+                $subheaderChildren = $subheader[0]->getElementsbyTagName("li");
 
-                    $explodedDate = explode(" ", trim($subheaderChildren->item(0)->textContent));
-                    array_shift($explodedDate);
-                    $pageStats["date"] = trim(implode(" ", $explodedDate));
+                $explodedDate = explode(" ", trim($subheaderChildren->item(0)->textContent));
+                array_shift($explodedDate);
+                $pageStats["date"] = trim(implode(" ", $explodedDate));
 
-                    $explodedLocation = explode(" ", trim($subheaderChildren->item(1)->textContent));
-                    array_shift($explodedLocation);
-                    $pageStats["location"] = trim(implode(" ", $explodedLocation));
-                } else if ($subheader->length > 0) {
-                    Throw new \Exception(".b-list__box-list did not have any p element children");
-                } else {
-                    Throw new \Exception("the subheader was not found");
-                }
+                $explodedLocation = explode(" ", trim($subheaderChildren->item(1)->textContent));
+                array_shift($explodedLocation);
+                $pageStats["location"] = trim(implode(" ", $explodedLocation));
+            } else if ($subheader->length > 0) {
+                Throw new \Exception(".b-list__box-list did not have any p element children");
+            } else {
+                Throw new \Exception("the subheader was not found");
+            }
 
-                // scrape the data off of the table element
-                $xPathExpression = $this->converter->toXPath("tbody > tr");
-                $tableRows = $xmlDocument->evaluate($xPathExpression);
-                $i = 1;
-                foreach ($tableRows as $row) {
-                    $rowData = [];
-                    $tableColumns = $row->getElementsByTagName("td");
+            // scrape the data off of the table element
+            $xPathExpression = $this->converter->toXPath("tbody > tr");
+            $tableRows = $xmlDocument->evaluate($xPathExpression);
+            $i = 1;
+            foreach ($tableRows as $row) {
+                $rowData = [];
+                $tableColumns = $row->getElementsByTagName("td");
                     
-                    if ($tableColumns->length == 10) {
-                        $columnOne = $tableColumns->item(0);
-                        $columnOneChildren = $columnOne->getElementsByTagName("p");
-                        $rowData["noContest"] = $columnOneChildren->length == 2 ? true : false;
+                if ($tableColumns->length == 10) {
+                    $columnOne = $tableColumns->item(0);
+                    $columnOneChildren = $columnOne->getElementsByTagName("p");
+                    $rowData["noContest"] = $columnOneChildren->length == 2 ? true : false;
 
-                        $columnTwo = $tableColumns->item(1);
-                        $columnTwoChildren = $columnTwo->getElementsByTagName("p");
-                        $rowData["fighterOne"] = trim($columnTwoChildren->item(0)->textContent);
-                        $rowData["fighterTwo"] = trim($columnTwoChildren->item(1)->textContent);
+                    $columnTwo = $tableColumns->item(1);
+                    $columnTwoChildren = $columnTwo->getElementsByTagName("p");
+                    $rowData["fighterOne"] = trim($columnTwoChildren->item(0)->textContent);
+                    $rowData["fighterTwo"] = trim($columnTwoChildren->item(1)->textContent);
 
-                        $columnThree = $tableColumns->item(2);
-                        $columnThreeChildren = $columnThree->getElementsByTagName("p");
-                        $rowData["fighterOneKd"] = trim($columnThreeChildren->item(0)->textContent);
-                        $rowData["fighterTwoKd"] = trim($columnThreeChildren->item(1)->textContent);
+                    $columnThree = $tableColumns->item(2);
+                    $columnThreeChildren = $columnThree->getElementsByTagName("p");
+                    $rowData["fighterOneKd"] = trim($columnThreeChildren->item(0)->textContent);
+                    $rowData["fighterTwoKd"] = trim($columnThreeChildren->item(1)->textContent);
 
-                        $columnFour = $tableColumns->item(3);
-                        $columnFourChildren = $columnFour->getElementsByTagName("p");
-                        $rowData["fighterOneStr"] = trim($columnFourChildren->item(0)->textContent);
-                        $rowData["fighterTwoStr"] = trim($columnFourChildren->item(1)->textContent);
+                    $columnFour = $tableColumns->item(3);
+                    $columnFourChildren = $columnFour->getElementsByTagName("p");
+                    $rowData["fighterOneStr"] = trim($columnFourChildren->item(0)->textContent);
+                    $rowData["fighterTwoStr"] = trim($columnFourChildren->item(1)->textContent);
 
-                        $columnfive = $tableColumns->item(4);
-                        $columnfiveChildren = $columnfive->getElementsByTagName("p");
-                        $rowData["fighterOneTd"] = trim($columnfiveChildren->item(0)->textContent);
-                        $rowData["fighterTwoTd"] = trim($columnfiveChildren->item(1)->textContent);
+                    $columnfive = $tableColumns->item(4);
+                    $columnfiveChildren = $columnfive->getElementsByTagName("p");
+                    $rowData["fighterOneTd"] = trim($columnfiveChildren->item(0)->textContent);
+                    $rowData["fighterTwoTd"] = trim($columnfiveChildren->item(1)->textContent);
 
-                        $columnSix = $tableColumns->item(5);
-                        $columnSixChildren = $columnSix->getElementsByTagName("p");
-                        $rowData["fighterOneSub"] = trim($columnSixChildren->item(0)->textContent);
-                        $rowData["fighterTwoSub"] = trim($columnSixChildren->item(1)->textContent);
+                    $columnSix = $tableColumns->item(5);
+                    $columnSixChildren = $columnSix->getElementsByTagName("p");
+                    $rowData["fighterOneSub"] = trim($columnSixChildren->item(0)->textContent);
+                    $rowData["fighterTwoSub"] = trim($columnSixChildren->item(1)->textContent);
 
-                        $columnSeven = $tableColumns->item(6);
-                        $columnSevenChildren = $columnSeven->getElementsByTagName("p");
-                        $rowData["weightClass"] = trim($columnSevenChildren->item(0)->textContent);
+                    $columnSeven = $tableColumns->item(6);
+                    $columnSevenChildren = $columnSeven->getElementsByTagName("p");
+                    $rowData["weightClass"] = trim($columnSevenChildren->item(0)->textContent);
 
-                        $columnEight = $tableColumns->item(7);
-                        $columnEightChildren = $columnEight->getElementsByTagName("p");
-                        if (trim($columnEightChildren->item(1)->textContent) != "") {
-                            $rowData["method"] = trim($columnEightChildren->item(0)->textContent) . " " . trim($columnEightChildren->item(1)->textContent);
-                        } else {
-                            $rowData["method"] = trim($columnEightChildren->item(0)->textContent);
-                        }
+                    $columnEight = $tableColumns->item(7);
+                    $columnEightChildren = $columnEight->getElementsByTagName("p");
+                    if (trim($columnEightChildren->item(1)->textContent) != "") {
+                        $rowData["method"] = trim($columnEightChildren->item(0)->textContent) . " " . trim($columnEightChildren->item(1)->textContent);
+                    } else {
+                        $rowData["method"] = trim($columnEightChildren->item(0)->textContent);
+                    }
 
-                        $columnNine = $tableColumns->item(8);
-                        $columnNineChildren = $columnNine->getElementsByTagName("p");
-                        $rowData["round"] = trim($columnNineChildren->item(0)->textContent);
+                    $columnNine = $tableColumns->item(8);
+                    $columnNineChildren = $columnNine->getElementsByTagName("p");
+                    $rowData["round"] = trim($columnNineChildren->item(0)->textContent);
 
-                        $columnTen = $tableColumns->item(9);
-                        $columnTenChildren = $columnTen->getElementsByTagName("p");
-                        $rowData["finalTime"] = trim($columnTenChildren->item(0)->textContent);
+                    $columnTen = $tableColumns->item(9);
+                    $columnTenChildren = $columnTen->getElementsByTagName("p");
+                    $rowData["finalTime"] = trim($columnTenChildren->item(0)->textContent);
 
-                        $pageStats["row$i"] = $rowData;
-                        $i++;
+                    $pageStats["row$i"] = $rowData;
+                    $i++;
                     } else {
                         Throw new \Exception("there was not 10 table rows");
                     }
                 }
-                $eventStackStack[] = $pageStats;
-                echo "event scraped";
-                sleep(1);
-            }
-            return $eventStackStack;
+            return $pageStats;
         }
     }
 ?>

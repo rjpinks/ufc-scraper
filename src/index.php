@@ -39,11 +39,11 @@
     echo "event urls scraped\n";
     sleep(1);
 
-    $eventStatsStack = $scraper->scrapeEventStats($urlStack);
     $currentEvent = 1;
     echo "event mapping begun\n";
-    while ($eventStatsStack) {
-        $eventStats = array_pop($eventStatsStack);
+    while (count($urlStack) > 1) {
+        $url = array_pop($urlStack);
+        $eventStats = $scraper->scrapeEventStats($url);
         $eventDataDto = $mapper->scrapedEventsToEventDataDtoMapper($eventStats);
 
         $connection = $pdo->connect();
@@ -60,6 +60,7 @@
         }
 
         echo "an event was scrapped, mapped, and inserted into appropriate tables\n";
+        sleep(1);
         $currentEvent++;
     }
 

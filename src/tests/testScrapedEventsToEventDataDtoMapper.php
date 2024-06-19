@@ -24,19 +24,24 @@
     }
 
     $scraper = new Scraper();
-    $results = $scraper->scrapeEventStats([
+    
+    $results = [];
+    $urls = [
         "http://ufcstats.com/event-details/cba3a2dfbc06ce79",
         "http://ufcstats.com/event-details/a6a9ab5a824e8f66",
         "http://ufcstats.com/event-details/279093302a6f44b3",
         "http://ufcstats.com/event-details/2a542ee8a8b83559",
         "http://ufcstats.com/event-details/f9aa6376ae16bfb4"
-    ]);
+    ];
+    foreach ($urls as $url) {
+        $results[] = $scraper->scrapeEventStats($url);
+    }
     $mapper = new Mapper();
-    $test1 = $mapper->scrapedEventsToEventDataDtoMapper($results[4]);
-    $test2 = $mapper->scrapedEventsToEventDataDtoMapper($results[3]);
+    $test1 = $mapper->scrapedEventsToEventDataDtoMapper($results[0]);
+    $test2 = $mapper->scrapedEventsToEventDataDtoMapper($results[1]);
     $test3 = $mapper->scrapedEventsToEventDataDtoMapper($results[2]);
-    $test4 = $mapper->scrapedEventsToEventDataDtoMapper($results[1]);
-    $test5 = $mapper->scrapedEventsToEventDataDtoMapper($results[0]);
+    $test4 = $mapper->scrapedEventsToEventDataDtoMapper($results[3]);
+    $test5 = $mapper->scrapedEventsToEventDataDtoMapper($results[4]);
 
     $expected1 = new EventDataDto(
         "UFC Fight Night: Cannonier vs. Imavov",
